@@ -128,7 +128,7 @@ export default function Home() {
         <section style={styles.features}>
           {[
             {
-              title: "Elite Coaching",
+              title: "Elite Coachings",
               text: "Receive guidance from transformational mentors and wellness experts."
             },
             {
