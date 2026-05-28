@@ -1,77 +1,77 @@
-export const dynamic = "force-dynamic";
+"use client";
 
-async function getPrograms() {
-  try {
-    const res = await fetch(
-      "https://se4f92gk.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=='program']{_id,title,description,'imageUrl':image.asset->url}",
-      { cache: "no-store" }
-    );
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
-    if (!res.ok) throw new Error("Failed to fetch programs");
+export default function Page() {
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
 
-    const data = await res.json();
-    return data?.result || [];
-  } catch (err) {
-    console.error("Sanity error:", err);
-    return [];
-  }
-}
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch(
+        "https://se4f92gk.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=='program']{_id,title,description,'imageUrl':image.asset->url}"
+      );
 
-import HomeClient from "./HomeClient";
+      const data = await res.json();
+      setPrograms(data?.result || []);
+    }
 
-export default async function Page() {
-  const programs = await getPrograms();
+    fetchData();
+  }, []);
 
   return (
-    <HomeClient
-      programs={programs}
-      hero={{
-        title: "Transform Your Life With Guided Growth",
-        subtitle:
-          "Structured programs, expert mentorship, and a supportive community designed to help you grow emotionally, spiritually, and professionally.",
-      }}
-      sections={{
-        features: [
-          {
-            title: "Personal Transformation",
-            desc: "Step-by-step guided programs that help you reset your mindset and habits.",
-          },
-          {
-            title: "Expert Mentorship",
-            desc: "Learn directly from experienced coaches and transformation guides.",
-          },
-          {
-            title: "Community Support",
-            desc: "Join a powerful network of people growing together.",
-          },
-        ],
+    <div className="page">
+      {/* NAV */}
+      <motion.nav className="nav">
+        <div className="logo">
+          <img src="https://cdn.sanity.io/images/se4f92gk/production/e721da04619811c3cd756185877f3f55ec4c2512-415x514.svg" />
+          <span>Lumira</span>
+        </div>
 
-        stats: [
-          { label: "Active Members", value: "10,000+" },
-          { label: "Programs Completed", value: "25,000+" },
-          { label: "Success Rate", value: "92%" },
-        ],
+        <div className="links">
+          <a href="/">Home</a>
+          <a href="/programs">Programs</a>
+          <a href="/gurus">Gurus</a>
+          <a href="/careers">Careers</a>
+        </div>
 
-        testimonials: [
-          {
-            name: "Sarah M.",
-            text: "This platform completely changed my mindset and direction in life.",
-          },
-          {
-            name: "David K.",
-            text: "The programs are structured and easy to follow. Very powerful.",
-          },
-          {
-            name: "Aisha T.",
-            text: "I finally feel clarity and purpose after joining Lumira Circle.",
-          },
-        ],
+        <div className="hamburger" onClick={() => setOpen(true)}>
+          ☰
+        </div>
+      </motion.nav>
 
-        cta: {
-          title: "Start Your Transformation Today",
-          button: "Explore Programs",
-        },
-      }}
-    />
+      {/* MOBILE MENU */}
+      {open && <div className="overlay" onClick={() => setOpen(false)} />}
+
+      <motion.div
+        className="sidebar"
+        animate={{ x: open ? 0 : 300 }}
+      >
+        <a href="/">Home</a>
+        <a href="/programs">Programs</a>
+        <a href="/gurus">Gurus</a>
+        <a href="/careers">Careers</a>
+
+        <button onClick={() => setOpen(false)}>Close</button>
+      </motion.div>
+
+      {/* HERO */}
+      <section className="hero">
+        <h1>Transform Your Life</h1>
+        <p>Premium coaching programs for real transformation.</p>
+      </section>
+
+      {/* PROGRAMS */}
+      <section className="grid">
+        {programs.map((p) => (
+          <motion.div key={p._id} whileHover={{ scale: 1.03 }} className="card">
+            <img src={p.imageUrl} />
+            <h3>{p.title}</h3>
+            <p>{p.description}</p>
+          </motion.div>
+        ))}
+      </section>
+    </div>
   );
 }
