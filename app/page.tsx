@@ -15,7 +15,7 @@ async function getPrograms() {
   return data.result;
 }
 
-export default async function HomePage() {
+export default async function Page() {
   const programs = await getPrograms();
 
   const [open, setOpen] = useState(false);
@@ -29,11 +29,11 @@ export default async function HomePage() {
         style={styles.nav}
       >
         <div style={styles.logo}>
-          <div style={styles.logoDot}></div>
-          <span>Lumira Circle</span>
+          <div style={styles.dot}></div>
+          Lumira Circle
         </div>
 
-        <div style={styles.links} className="desktop">
+        <div style={styles.links}>
           <a href="/">Home</a>
           <a href="/programs">Programs</a>
           <a href="/gurus">Gurus</a>
@@ -47,12 +47,7 @@ export default async function HomePage() {
 
       {/* OVERLAY */}
       {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          style={styles.overlay}
-          onClick={() => setOpen(false)}
-        />
+        <div style={styles.overlay} onClick={() => setOpen(false)} />
       )}
 
       {/* SIDEBAR */}
@@ -64,67 +59,55 @@ export default async function HomePage() {
       >
         <h3>Menu</h3>
 
-        <a href="/" onClick={() => setOpen(false)}>Home</a>
-        <a href="/programs" onClick={() => setOpen(false)}>Programs</a>
-        <a href="/gurus" onClick={() => setOpen(false)}>Gurus</a>
-        <a href="/careers" onClick={() => setOpen(false)}>Careers</a>
+        <a href="/">Home</a>
+        <a href="/programs">Programs</a>
+        <a href="/gurus">Gurus</a>
+        <a href="/careers">Careers</a>
 
-        <button style={styles.closeBtn} onClick={() => setOpen(false)}>
+        <button style={styles.close} onClick={() => setOpen(false)}>
           Close
         </button>
       </motion.div>
 
       {/* HERO */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        style={styles.hero}
-      >
-        <h1 style={styles.heroTitle}>
-          Transform Your Mind, Body & Purpose
-        </h1>
+      <section style={styles.hero}>
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={styles.title}
+        >
+          Transform Your Life
+        </motion.h1>
 
-        <p style={styles.heroText}>
-          A premium space for growth, coaching, and transformation programs.
+        <p style={styles.subtitle}>
+          Premium coaching, programs, and personal transformation.
         </p>
-      </motion.section>
+      </section>
 
       {/* PROGRAMS */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionTitle}>Featured Programs</h2>
+      <section style={styles.section}>
+        <h2>Featured Programs</h2>
 
         <div style={styles.grid}>
-          {programs?.slice(0, 3).map((p: any, i: number) => (
+          {programs?.map((p: any, i: number) => (
             <motion.div
               key={p._id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.2 }}
+              transition={{ delay: i * 0.1 }}
               whileHover={{ scale: 1.05 }}
               style={styles.card}
             >
               {p.imageUrl && (
-                <img src={p.imageUrl} style={styles.cardImg} />
+                <img src={p.imageUrl} style={styles.img} />
               )}
 
-              <div style={styles.cardBody}>
-                <h3>{p.title}</h3>
-                <p>{p.description}</p>
-              </div>
+              <h3>{p.title}</h3>
+              <p>{p.description}</p>
             </motion.div>
           ))}
         </div>
-      </div>
-
-      {/* CTA */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        style={styles.cta}
-      >
-        <h2>Start Your Transformation Today</h2>
-      </motion.section>
+      </section>
     </div>
   );
 }
@@ -140,7 +123,7 @@ const styles: any = {
   nav: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "18px 30px",
+    padding: 18,
     background: "white",
     position: "sticky",
     top: 0,
@@ -149,12 +132,11 @@ const styles: any = {
 
   logo: {
     display: "flex",
-    alignItems: "center",
-    gap: "10px",
+    gap: 10,
     fontWeight: "bold",
   },
 
-  logoDot: {
+  dot: {
     width: 10,
     height: 10,
     borderRadius: "50%",
@@ -163,7 +145,7 @@ const styles: any = {
 
   links: {
     display: "flex",
-    gap: 20,
+    gap: 15,
   },
 
   hamburger: {
@@ -175,24 +157,22 @@ const styles: any = {
     position: "fixed",
     inset: 0,
     background: "rgba(0,0,0,0.4)",
-    zIndex: 998,
   },
 
   sidebar: {
     position: "fixed",
-    top: 0,
     right: 0,
+    top: 0,
     width: 260,
     height: "100%",
     background: "white",
     padding: 20,
-    zIndex: 999,
     display: "flex",
     flexDirection: "column",
     gap: 15,
   },
 
-  closeBtn: {
+  close: {
     marginTop: 20,
     padding: 10,
     background: "#111",
@@ -202,26 +182,19 @@ const styles: any = {
 
   hero: {
     textAlign: "center",
-    padding: "90px 20px 50px",
+    padding: "80px 20px 40px",
   },
 
-  heroTitle: {
-    fontSize: 52,
+  title: {
+    fontSize: 48,
   },
 
-  heroText: {
+  subtitle: {
     color: "#555",
-    maxWidth: 600,
-    margin: "auto",
   },
 
   section: {
-    padding: "50px",
-  },
-
-  sectionTitle: {
-    fontSize: 28,
-    marginBottom: 20,
+    padding: 40,
   },
 
   grid: {
@@ -232,26 +205,15 @@ const styles: any = {
 
   card: {
     background: "white",
-    borderRadius: 15,
-    overflow: "hidden",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
-    cursor: "pointer",
-  },
-
-  cardImg: {
-    width: "100%",
-    height: 180,
-    objectFit: "cover",
-  },
-
-  cardBody: {
     padding: 15,
+    borderRadius: 15,
+    boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
   },
 
-  cta: {
-    textAlign: "center",
-    padding: "80px 20px",
-    background: "#6c63ff",
-    color: "white",
+  img: {
+    width: "100%",
+    height: 160,
+    objectFit: "cover",
+    borderRadius: 10,
   },
 };
