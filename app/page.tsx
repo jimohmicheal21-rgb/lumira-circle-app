@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 
 export default function Page() {
   const [programs, setPrograms] = useState<any[]>([]);
@@ -22,8 +21,9 @@ export default function Page() {
 
   return (
     <div className="page">
-      {/* NAV */}
-      <motion.nav className="nav">
+
+      {/* NAVBAR */}
+      <nav className="nav">
         <div className="logo">
           <img src="https://cdn.sanity.io/images/se4f92gk/production/e721da04619811c3cd756185877f3f55ec4c2512-415x514.svg" />
           <span>Lumira</span>
@@ -36,42 +36,73 @@ export default function Page() {
           <a href="/careers">Careers</a>
         </div>
 
-        <div className="hamburger" onClick={() => setOpen(true)}>
-          ☰
-        </div>
-      </motion.nav>
+        <div className="hamburger" onClick={() => setOpen(true)}>☰</div>
+      </nav>
 
       {/* MOBILE MENU */}
       {open && <div className="overlay" onClick={() => setOpen(false)} />}
 
-      <motion.div
-        className="sidebar"
-        animate={{ x: open ? 0 : 300 }}
-      >
+      <div className="sidebar" style={{ right: open ? 0 : "-300px" }}>
         <a href="/">Home</a>
         <a href="/programs">Programs</a>
         <a href="/gurus">Gurus</a>
         <a href="/careers">Careers</a>
-
         <button onClick={() => setOpen(false)}>Close</button>
-      </motion.div>
+      </div>
 
-      {/* HERO */}
+      {/* HERO SECTION */}
       <section className="hero">
-        <h1>Transform Your Life</h1>
-        <p>Premium coaching programs for real transformation.</p>
+        <h1>Transform Your Life With Guided Growth</h1>
+        <p>
+          Structured programs, expert mentorship, and a supportive community
+          designed to help you grow emotionally, spiritually, and professionally.
+        </p>
+
+        <button className="btn">Explore Programs</button>
+      </section>
+
+      {/* STATS SECTION */}
+      <section className="stats">
+        <div><h2>10,000+</h2><p>Active Members</p></div>
+        <div><h2>25,000+</h2><p>Programs Completed</p></div>
+        <div><h2>92%</h2><p>Success Rate</p></div>
+      </section>
+
+      {/* FEATURES */}
+      <section className="features">
+        <div>
+          <h3>Personal Growth</h3>
+          <p>Step-by-step transformation programs for clarity and mindset shift.</p>
+        </div>
+
+        <div>
+          <h3>Expert Mentorship</h3>
+          <p>Learn directly from experienced coaches and guides.</p>
+        </div>
+
+        <div>
+          <h3>Community Support</h3>
+          <p>Grow together with a strong supportive network.</p>
+        </div>
       </section>
 
       {/* PROGRAMS */}
       <section className="grid">
         {programs.map((p) => (
-          <motion.div key={p._id} whileHover={{ scale: 1.03 }} className="card">
+          <div key={p._id} className="card">
             <img src={p.imageUrl} />
             <h3>{p.title}</h3>
             <p>{p.description}</p>
-          </motion.div>
+          </div>
         ))}
       </section>
+
+      {/* CTA SECTION */}
+      <section className="cta">
+        <h2>Start Your Transformation Today</h2>
+        <button>Get Started</button>
+      </section>
+
     </div>
   );
 }

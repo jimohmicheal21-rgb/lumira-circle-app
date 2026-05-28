@@ -24,18 +24,17 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
 .page {
   font-family: Arial;
   background: #f6f7fb;
-  min-height: 100vh;
 }
 
 /* NAV */
 .nav {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 18px 25px;
+  padding: 18px;
   background: white;
   position: sticky;
   top: 0;
@@ -44,7 +43,6 @@ body {
 
 .logo {
   display: flex;
-  align-items: center;
   gap: 10px;
   font-weight: bold;
 }
@@ -56,48 +54,94 @@ body {
 
 .links {
   display: flex;
-  gap: 18px;
+  gap: 15px;
 }
 
-.links a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-}
-
-/* HAMBURGER */
 .hamburger {
   display: none;
   font-size: 26px;
-  cursor: pointer;
 }
 
 /* HERO */
 .hero {
   text-align: center;
-  padding: 80px 20px 40px;
+  padding: 90px 20px;
 }
 
-/* GRID */
+.hero h1 {
+  font-size: 48px;
+}
+
+.hero p {
+  max-width: 700px;
+  margin: auto;
+  color: #555;
+}
+
+.btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: black;
+  color: white;
+  border-radius: 8px;
+}
+
+/* STATS */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 40px;
+  background: white;
+}
+
+.stats div {
+  text-align: center;
+}
+
+/* FEATURES */
+.features {
+  display: flex;
+  gap: 20px;
+  padding: 40px;
+}
+
+.features div {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+/* PROGRAM GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
   padding: 30px;
+  gap: 20px;
 }
 
 .card {
   background: white;
   padding: 15px;
   border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 .card img {
   width: 100%;
   height: 160px;
   object-fit: cover;
-  border-radius: 10px;
+}
+
+/* CTA */
+.cta {
+  text-align: center;
+  padding: 70px;
+  background: #111;
+  color: white;
+}
+
+.cta button {
+  margin-top: 15px;
+  padding: 12px 18px;
 }
 
 /* MOBILE */
@@ -109,25 +153,13 @@ body {
   .hamburger {
     display: block;
   }
-}
 
-/* OVERLAY */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-}
+  .features {
+    flex-direction: column;
+  }
 
-/* SIDEBAR */
-.sidebar {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 260px;
-  height: 100%;
-  background: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  .stats {
+    flex-direction: column;
+    gap: 20px;
+  }
 }
