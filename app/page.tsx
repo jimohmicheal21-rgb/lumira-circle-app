@@ -1,445 +1,257 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
-export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
+export const dynamic = "force-dynamic";
+
+async function getPrograms() {
+  const res = await fetch(
+    "https://se4f92gk.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=='program']{_id,title,description,'imageUrl':image.asset->url}",
+    { cache: "no-store" }
+  );
+
+  const data = await res.json();
+  return data.result;
+}
+
+export default async function HomePage() {
+  const programs = await getPrograms();
+
+  const [open, setOpen] = useState(false);
 
   return (
-    <>
-      <main style={styles.page}>
-        {/* NAVBAR */}
-        <motion.nav
-          initial={{ y: -80, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          style={styles.nav}
-        >
-          {/* LOGO */}
-          <div style={styles.logoWrap}>
-            <img
-              src="https://cdn.sanity.io/images/se4f92gk/production/e721da04619811c3cd756185877f3f55ec4c2512-415x514.svg"
-              alt="Lumira Logo"
-              style={styles.logo}
-            />
+    <div style={styles.page}>
+      {/* NAVBAR */}
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        style={styles.nav}
+      >
+        <div style={styles.logo}>
+          <div style={styles.logoDot}></div>
+          <span>Lumira Circle</span>
+        </div>
 
-            <h2 style={styles.logoText}>Lumira Circle</h2>
-          </div>
+        <div style={styles.links} className="desktop">
+          <a href="/">Home</a>
+          <a href="/programs">Programs</a>
+          <a href="/gurus">Gurus</a>
+          <a href="/careers">Careers</a>
+        </div>
 
-          {/* DESKTOP NAV */}
-          <div className="desktop-links" style={styles.links}>
-            <Link href="/" style={styles.link}>Home</Link>
-            <Link href="/programs" style={styles.link}>Programs</Link>
-            <Link href="/gurus" style={styles.link}>Gurus</Link>
-            <Link href="/become-coach" style={styles.link}>Become Coach</Link>
-            <Link href="/careers" style={styles.link}>Careers</Link>
-          </div>
+        <div style={styles.hamburger} onClick={() => setOpen(true)}>
+          ☰
+        </div>
+      </motion.nav>
 
-          {/* HAMBURGER */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            style={styles.menuBtn}
-          >
-            ☰
-          </button>
-        </motion.nav>
+      {/* OVERLAY */}
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={styles.overlay}
+          onClick={() => setOpen(false)}
+        />
+      )}
 
-        {/* MOBILE MENU */}
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            style={styles.mobileMenu}
-          >
-            <Link href="/" style={styles.mobileLink}>Home</Link>
-            <Link href="/programs" style={styles.mobileLink}>Programs</Link>
-            <Link href="/gurus" style={styles.mobileLink}>Gurus</Link>
-            <Link href="/become-coach" style={styles.mobileLink}>Become Coach</Link>
-            <Link href="/careers" style={styles.mobileLink}>Careers</Link>
-          </motion.div>
-        )}
+      {/* SIDEBAR */}
+      <motion.div
+        initial={{ x: 300 }}
+        animate={{ x: open ? 0 : 300 }}
+        transition={{ type: "spring", stiffness: 120 }}
+        style={styles.sidebar}
+      >
+        <h3>Menu</h3>
 
-        {/* HERO */}
-        <section style={styles.hero}>
-          {/* BLUR EFFECTS */}
-          <motion.div
-            animate={{ y: [0, -20, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 6,
-            }}
-            style={styles.blur1}
-          />
+        <a href="/" onClick={() => setOpen(false)}>Home</a>
+        <a href="/programs" onClick={() => setOpen(false)}>Programs</a>
+        <a href="/gurus" onClick={() => setOpen(false)}>Gurus</a>
+        <a href="/careers" onClick={() => setOpen(false)}>Careers</a>
 
-          <motion.div
-            animate={{ y: [0, 25, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 8,
-            }}
-            style={styles.blur2}
-          />
+        <button style={styles.closeBtn} onClick={() => setOpen(false)}>
+          Close
+        </button>
+      </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 70 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            style={styles.heroContent}
-          >
-            <motion.img
-              animate={{
-                rotate: [0, 4, -4, 0],
-              }}
-              transition={{
-                repeat: Infinity,
-                duration: 5,
-              }}
-              src="https://cdn.sanity.io/images/se4f92gk/production/e721da04619811c3cd756185877f3f55ec4c2512-415x514.svg"
-              style={styles.heroLogo}
-            />
+      {/* HERO */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        style={styles.hero}
+      >
+        <h1 style={styles.heroTitle}>
+          Transform Your Mind, Body & Purpose
+        </h1>
 
-            <h1 style={styles.heroTitle}>
-              Transform Your Life
-              <br />
-              Through Wellness & Education
-            </h1>
+        <p style={styles.heroText}>
+          A premium space for growth, coaching, and transformation programs.
+        </p>
+      </motion.section>
 
-            <p style={styles.heroText}>
-              Lumira Circle empowers women through transformational
-              wellness, elite mentorship, healing, and premium education.
-            </p>
+      {/* PROGRAMS */}
+      <div style={styles.section}>
+        <h2 style={styles.sectionTitle}>Featured Programs</h2>
 
-            <div style={styles.buttonWrap}>
-              <Link href="/programs" style={styles.primaryBtn}>
-                Explore Programs
-              </Link>
-
-              <Link href="/gurus" style={styles.secondaryBtn}>
-                Meet The Gurus
-              </Link>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* FEATURES */}
-        <section style={styles.features}>
-          {[
-            {
-              title: "Elite Coachings",
-              text: "Receive guidance from transformational mentors and wellness experts."
-            },
-            {
-              title: "Mindset Growth",
-              text: "Unlock healing, confidence, clarity, and emotional growth."
-            },
-            {
-              title: "Premium Community",
-              text: "Join a powerful network of ambitious and evolving women."
-            }
-          ].map((item, index) => (
+        <div style={styles.grid}>
+          {programs?.slice(0, 3).map((p: any, i: number) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 80 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              whileHover={{
-                y: -10,
-                scale: 1.03,
-              }}
+              key={p._id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.2 }}
+              whileHover={{ scale: 1.05 }}
               style={styles.card}
             >
-              <h2 style={styles.cardTitle}>{item.title}</h2>
-              <p style={styles.cardText}>{item.text}</p>
+              {p.imageUrl && (
+                <img src={p.imageUrl} style={styles.cardImg} />
+              )}
+
+              <div style={styles.cardBody}>
+                <h3>{p.title}</h3>
+                <p>{p.description}</p>
+              </div>
             </motion.div>
           ))}
-        </section>
+        </div>
+      </div>
 
-        {/* CTA */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          style={styles.cta}
-        >
-          <h2 style={styles.ctaTitle}>
-            Ready For Your Transformation?
-          </h2>
-
-          <p style={styles.ctaText}>
-            Discover healing, mentorship, feminine growth,
-            confidence, and transformational wellness through Lumira Circle.
-          </p>
-
-          <Link href="/programs" style={styles.ctaButton}>
-            Join Lumira Circle
-          </Link>
-        </motion.section>
-      </main>
-
-      {/* RESPONSIVE CSS */}
-      <style jsx>{`
-        @media (max-width: 900px) {
-          .desktop-links {
-            display: none !important;
-          }
-
-          button {
-            display: block !important;
-          }
-        }
-
-        @media (min-width: 901px) {
-          button {
-            display: none !important;
-          }
-        }
-
-        @media (max-width: 768px) {
-          h1 {
-            font-size: 46px !important;
-          }
-        }
-
-        @media (max-width: 500px) {
-          h1 {
-            font-size: 36px !important;
-          }
-        }
-      `}</style>
-    </>
+      {/* CTA */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        style={styles.cta}
+      >
+        <h2>Start Your Transformation Today</h2>
+      </motion.section>
+    </div>
   );
 }
 
+/* STYLES */
 const styles: any = {
   page: {
-    background: "#f5f7fb",
-    minHeight: "100vh",
     fontFamily: "Arial",
-    overflowX: "hidden",
-    maxWidth: "100vw",
+    background: "linear-gradient(180deg,#f7f8ff,#eef1ff)",
+    minHeight: "100vh",
   },
 
   nav: {
-    position: "sticky",
-    top: 0,
-    zIndex: 100,
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
-    padding: "18px 40px",
-    background: "rgba(255,255,255,0.75)",
-    backdropFilter: "blur(16px)",
-    borderBottom: "1px solid rgba(0,0,0,0.05)",
-  },
-
-  logoWrap: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
+    padding: "18px 30px",
+    background: "white",
+    position: "sticky",
+    top: 0,
+    zIndex: 1000,
   },
 
   logo: {
-    width: "38px",
-    height: "38px",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    fontWeight: "bold",
   },
 
-  logoText: {
-    fontSize: "22px",
-    fontWeight: "bold",
-    color: "#111",
+  logoDot: {
+    width: 10,
+    height: 10,
+    borderRadius: "50%",
+    background: "#6c63ff",
   },
 
   links: {
     display: "flex",
-    gap: "24px",
-    alignItems: "center",
+    gap: 20,
   },
 
-  link: {
-    color: "#333",
-    textDecoration: "none",
-    fontWeight: "600",
-    fontSize: "15px",
-  },
-
-  menuBtn: {
-    background: "none",
-    border: "none",
-    fontSize: "30px",
+  hamburger: {
+    fontSize: 26,
     cursor: "pointer",
-    color: "#111",
-    display: "none",
   },
 
-  mobileMenu: {
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.4)",
+    zIndex: 998,
+  },
+
+  sidebar: {
+    position: "fixed",
+    top: 0,
+    right: 0,
+    width: 260,
+    height: "100%",
+    background: "white",
+    padding: 20,
+    zIndex: 999,
     display: "flex",
     flexDirection: "column",
-    gap: "20px",
-    padding: "25px",
-    background: "white",
-    borderBottom: "1px solid #eee",
+    gap: 15,
   },
 
-  mobileLink: {
-    textDecoration: "none",
-    color: "#111",
-    fontWeight: "600",
-    fontSize: "16px",
+  closeBtn: {
+    marginTop: 20,
+    padding: 10,
+    background: "#111",
+    color: "white",
+    borderRadius: 8,
   },
 
   hero: {
-    position: "relative",
-    padding: "120px 20px",
     textAlign: "center",
-    overflow: "hidden",
-  },
-
-  heroContent: {
-    position: "relative",
-    zIndex: 5,
-    maxWidth: "900px",
-    margin: "auto",
-  },
-
-  heroLogo: {
-    width: "90px",
-    marginBottom: "25px",
+    padding: "90px 20px 50px",
   },
 
   heroTitle: {
-    fontSize: "72px",
-    fontWeight: "900",
-    lineHeight: "1.1",
-    color: "#111",
-    marginBottom: "25px",
+    fontSize: 52,
   },
 
   heroText: {
-    fontSize: "20px",
-    lineHeight: "1.8",
     color: "#555",
-    maxWidth: "760px",
+    maxWidth: 600,
     margin: "auto",
   },
 
-  buttonWrap: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "20px",
-    marginTop: "45px",
-    flexWrap: "wrap",
+  section: {
+    padding: "50px",
   },
 
-  primaryBtn: {
-    background: "#111827",
-    color: "white",
-    padding: "16px 34px",
-    borderRadius: "999px",
-    textDecoration: "none",
-    fontWeight: "bold",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+  sectionTitle: {
+    fontSize: 28,
+    marginBottom: 20,
   },
 
-  secondaryBtn: {
-    background: "white",
-    color: "#111",
-    padding: "16px 34px",
-    borderRadius: "999px",
-    textDecoration: "none",
-    fontWeight: "bold",
-    border: "1px solid #ddd",
-  },
-
-  blur1: {
-    position: "absolute",
-    width: "450px",
-    height: "450px",
-    background: "#8b5cf6",
-    borderRadius: "50%",
-    filter: "blur(120px)",
-    opacity: 0.15,
-    top: "-100px",
-    left: "-100px",
-  },
-
-  blur2: {
-    position: "absolute",
-    width: "400px",
-    height: "400px",
-    background: "#06b6d4",
-    borderRadius: "50%",
-    filter: "blur(120px)",
-    opacity: 0.12,
-    bottom: "-100px",
-    right: "-100px",
-  },
-
-  features: {
+  grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: "25px",
-    padding: "40px",
-    maxWidth: "1200px",
-    margin: "auto",
+    gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))",
+    gap: 20,
   },
 
   card: {
-    background: "rgba(255,255,255,0.7)",
-    backdropFilter: "blur(20px)",
-    padding: "35px",
-    borderRadius: "24px",
-    border: "1px solid rgba(255,255,255,0.5)",
-    boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
+    background: "white",
+    borderRadius: 15,
+    overflow: "hidden",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
+    cursor: "pointer",
   },
 
-  cardTitle: {
-    fontSize: "26px",
-    marginBottom: "15px",
-    color: "#111",
+  cardImg: {
+    width: "100%",
+    height: 180,
+    objectFit: "cover",
   },
 
-  cardText: {
-    color: "#555",
-    lineHeight: "1.7",
-    fontSize: "16px",
+  cardBody: {
+    padding: 15,
   },
 
   cta: {
-    margin: "100px auto",
-    maxWidth: "1000px",
-    background: "#111827",
-    color: "white",
     textAlign: "center",
-    padding: "80px 30px",
-    borderRadius: "40px",
-  },
-
-  ctaTitle: {
-    fontSize: "48px",
-    marginBottom: "20px",
-    fontWeight: "900",
-  },
-
-  ctaText: {
-    color: "#d1d5db",
-    fontSize: "18px",
-    lineHeight: "1.8",
-    maxWidth: "700px",
-    margin: "auto",
-  },
-
-  ctaButton: {
-    display: "inline-block",
-    marginTop: "35px",
-    background: "white",
-    color: "#111827",
-    padding: "16px 34px",
-    borderRadius: "999px",
-    textDecoration: "none",
-    fontWeight: "bold",
+    padding: "80px 20px",
+    background: "#6c63ff",
+    color: "white",
   },
 };
