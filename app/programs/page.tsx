@@ -1,6 +1,11 @@
+export const dynamic = "force-dynamic";
+
 async function getPrograms() {
   const res = await fetch(
-    "https://se4f92gk.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=='program']{_id,title,description,'imageUrl':image.asset->url}"
+    "https://se4f92gk.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=='program']{_id,title,description,'imageUrl':image.asset->url}",
+    {
+      cache: "no-store",
+    }
   );
 
   const data = await res.json();
@@ -29,6 +34,7 @@ export default async function ProgramsPage() {
           alignItems: "center",
           position: "sticky",
           top: 0,
+          zIndex: 100,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -36,14 +42,26 @@ export default async function ProgramsPage() {
             src="https://cdn.sanity.io/images/se4f92gk/production/e721da04619811c3cd756185877f3f55ec4c2512-415x514.svg"
             style={{ width: "42px", height: "42px" }}
           />
+
           <h2 style={{ margin: 0 }}>Lumira</h2>
         </div>
 
         <div style={{ display: "flex", gap: "18px" }}>
-          <a href="/" style={styles.link}>Home</a>
-          <a href="/programs" style={styles.link}>Programs</a>
-          <a href="/gurus" style={styles.link}>Gurus</a>
-          <a href="/careers" style={styles.link}>Careers</a>
+          <a href="/" style={styles.link}>
+            Home
+          </a>
+
+          <a href="/programs" style={styles.link}>
+            Programs
+          </a>
+
+          <a href="/gurus" style={styles.link}>
+            Gurus
+          </a>
+
+          <a href="/careers" style={styles.link}>
+            Careers
+          </a>
         </div>
       </nav>
 
@@ -54,7 +72,13 @@ export default async function ProgramsPage() {
           padding: "80px 30px 40px",
         }}
       >
-        <h1 style={{ fontSize: "54px", marginBottom: "10px" }}>
+        <h1
+          style={{
+            fontSize: "54px",
+            marginBottom: "10px",
+            color: "#111",
+          }}
+        >
           Transformational Programs
         </h1>
 
@@ -96,6 +120,7 @@ export default async function ProgramsPage() {
               {program.imageUrl && (
                 <img
                   src={program.imageUrl}
+                  alt={program.title}
                   style={{
                     width: "100%",
                     height: "220px",
@@ -105,11 +130,21 @@ export default async function ProgramsPage() {
               )}
 
               <div style={{ padding: "22px" }}>
-                <h2 style={{ marginBottom: "10px" }}>
+                <h2
+                  style={{
+                    marginBottom: "10px",
+                    color: "#111",
+                  }}
+                >
                   {program.title}
                 </h2>
 
-                <p style={{ color: "#666", lineHeight: 1.7 }}>
+                <p
+                  style={{
+                    color: "#666",
+                    lineHeight: 1.7,
+                  }}
+                >
                   {program.description}
                 </p>
 
@@ -122,6 +157,7 @@ export default async function ProgramsPage() {
                     border: "none",
                     borderRadius: "10px",
                     cursor: "pointer",
+                    fontWeight: "bold",
                   }}
                 >
                   Enroll Now
